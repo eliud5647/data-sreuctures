@@ -5,8 +5,8 @@
 void imprimirres(int **A,int **B, int **C,int msize);
 void mmul(int **A,int **B,int **C,int msize);
 void imprimirm(int **M,char m,int msize);
-void llenarM(int **M,char m,int msize);
-
+void llenarM(int **M,char m,int msize, char *txt);
+void writedoc(int **C,int msize);
 
 
 
@@ -16,8 +16,8 @@ int main(){
     int **A=malloc(msize * sizeof(int *));
     int **B=malloc(msize * sizeof(int *));
     int **C=malloc(msize * sizeof(int *));
-    llenarM(A,'A',msize);
-    llenarM(B,'B',msize);
+    llenarM(A,'A',msize,"a.txt");
+    llenarM(B,'B',msize,"b.txt");
     mmul(A,B,C,msize);
     imprimirres(A,B,C,msize);
     writedoc(C,msize);
@@ -27,15 +27,23 @@ int main(){
     return 0;
 }
 
-void llenarM(int **M, char m,int msize){
+void llenarM(int **M, char m,int msize,char txt[]){
     int i,j;
+    FILE *fp;
+    fp=fopen(txt,"r");
+    if (!fp)
+    {
+        perror("archivo no encontrado");
+    }
+    
     for(i=0;i<msize;i++){
         M[i]=malloc(msize*sizeof(int));
         for (j=0;j<msize;j++){
-            M[i][j]=rand()%11;
+            fscanf(fp,"%d",&M[i][j]);
             
         }
     }
+    fclose(fp);
     imprimirm(M,m,msize);
 
 }
@@ -111,3 +119,15 @@ void imprimirres(int **A,int **B, int **C,int msize){
     
 }
 
+void writedoc(int **C,int msize){
+    int i,j;
+    FILE *fp=fopen("c.txt","w");
+    for(i=0;i<msize;i++){
+        for(j=0;j<msize;j++){
+            fprintf(fp,"%d ",C[i][j]);
+        }
+        fprintf(fp,"\n");
+    }
+    fclose(fp);
+    
+}
